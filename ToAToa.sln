@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToAToa.Presentation", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToAToa.Domain", "src\ToAToa.Domain\ToAToa.Domain.csproj", "{AC6FD187-4A5C-4E70-B6E3-4826438DE53F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToAToa.DataAccess", "ToAToa.DataAccess\ToAToa.DataAccess.csproj", "{20E52577-19EA-4EE9-A49D-02FB423C0A5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToAToa.DataAccess", "src\ToAToa.DataAccess\ToAToa.DataAccess.csproj", "{20E52577-19EA-4EE9-A49D-02FB423C0A5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToAToa.Tests", "tests\ToAToa.Tests\ToAToa.Tests.csproj", "{CCDA4B60-1FFB-4B09-9272-6191FBF3D4F8}"
 EndProject
