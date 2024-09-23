@@ -25,7 +25,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\ToAToa.Domain\ToAToa.Domain.csproj" />
       <ProjectReference Include="..\..\src\ToAToa.Presentation\ToAToa.Presentation.csproj" />
-      <ProjectReference Include="..\..\ToAToa.DataAccess\ToAToa.DataAccess.csproj" />
+      <ProjectReference Include="..\..\src\ToAToa.DataAccess\ToAToa.DataAccess.csproj" />
     </ItemGroup>
 
 </Project>
