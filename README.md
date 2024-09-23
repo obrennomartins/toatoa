@@ -13,13 +13,13 @@ Este projeto foi fortemente inspirado na [Bored API](https://www.boredapi.com)
 com um toque de brasilidade. 
 
 O **Tô à toa** faz parte do portfólio de projetos públicos de 
-[Brenno Martins](https://tal.etc.br). O objetivo é usando .NET Core e outras 
-tecnologias da Microsoft com o objetivo 
+[Brenno Martins](https://tal.etc.br/eu). O objetivo é usando .NET Core e 
+outras tecnologias da Microsoft para documentar o aprendizado.
 
 
 ## Roteiro (roadmap)
 
-- [ ] Backend e API básica
+- [x] Backend e API básica
 - [ ] Skill Alexa
 - [ ] Frontend básico
 - [ ] Autenticação e atividades personalizadas
