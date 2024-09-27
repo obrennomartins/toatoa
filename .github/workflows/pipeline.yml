@@ -65,8 +65,10 @@ jobs:
         run: dotnet test --configuration Release
 
       - name: Upload de resultados para Codacy
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
-          bash <(curl -Ls https://coverage.codacy.com/get.sh) report --token ${{ secrets.CODACY_PROJECT_TOKEN }}
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report
 
   docker:
     runs-on: ubuntu-latest
