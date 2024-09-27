@@ -18,10 +18,14 @@ public static class DependencyInjection
             {
                 Version = "v1",
                 Title = "Tô à toa",
-                Contact = new OpenApiContact
+                Description = "Uma API simples para ajudar você a encontrar atividades para fazer.",
+                License = new OpenApiLicense
                 {
-                    Name = "Brenno Martins",
-                    Url = new Uri("https://tal.etc.br/eu")
+                    Name = "MIT"
+                },
+                Contact = new OpenApiContact()
+                {
+                    Name = "Brenno Martins"
                 }
             });
         });
@@ -32,8 +36,7 @@ public static class DependencyInjection
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Tô à toa API v1");
-            options.RoutePrefix = "";
+            options.SwaggerEndpoint("v1/swagger.json", "Tô à toa API v1");
         });
     }
 }
