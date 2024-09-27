@@ -9,40 +9,46 @@ jobs:
   sonarcloud:
     runs-on: windows-latest
     steps:
-      - name: Set up JDK 17
+      - name: Configurar JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'zulu'
-      - uses: actions/checkout@v4
+
+      - name: Verificar código
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Cache SonarCloud packages
+
+      - name: Cache de pacotes SonarCloud
         uses: actions/cache@v4
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Cache SonarCloud scanner
+
+      - name: Cache do scanner SonarCloud
         id: cache-sonar-scanner
         uses: actions/cache@v4
         with:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Install SonarCloud scanner
+
+      - name: Instalar scanner do SonarCloud
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Build and analyze
+
+      - name: Compilar e analisar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"obrennomartins_toatoa" /o:"obrennomartins" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"obrennomartins_toatoa" /o:"obrennomartins" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.opencover.xml"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
@@ -61,14 +67,21 @@ jobs:
       - name: Restaurar dependências
         run: dotnet restore
 
-      - name: Rodar testes unitários
-        run: dotnet test --configuration Release
+      - name: Executar testes unitários com cobertura
+        run: dotnet test --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults
 
-      - name: Upload de resultados para Codacy
+      - name: Instalar ReportGenerator
+        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      - name: Gerar relatório de cobertura no formato Cobertura
+        run: |
+          reportgenerator "-reports:./TestResults/**/coverage.cobertura.xml" "-targetdir:./TestResults/CoverageReport" -reporttypes:Cobertura
+
+      - name: Upload de cobertura de testes para o Codacy
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
-          bash <(curl -Ls https://coverage.codacy.com/get.sh) report
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./TestResults/CoverageReport/Cobertura.xml
 
   docker:
     runs-on: ubuntu-latest
