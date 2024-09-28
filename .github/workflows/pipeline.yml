@@ -102,15 +102,18 @@ jobs:
       - name: Construir imagem Docker
         run: |
           docker build -t ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} \
-                        --label "org.opencontainers.image.created=${{ env.BUILD_DATE }}" \
-                        --label "org.opencontainers.image.revision=${{ env.COMMIT_HASH }}" \
-                        --label "org.opencontainers.image.source=${{ github.repository }}" \
-                        --label "org.opencontainers.image.authors=${{ env.GIT_AUTHOR }}" \
-                        --label "org.opencontainers.image.title=${{ github.event.repository.name }}" \
-                        --label "org.opencontainers.image.description=${{ env.COMMIT_MESSAGE }}" .
+                       -t ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:latest \
+                       --label "org.opencontainers.image.created=${{ env.BUILD_DATE }}" \
+                       --label "org.opencontainers.image.revision=${{ env.COMMIT_HASH }}" \
+                       --label "org.opencontainers.image.source=${{ github.repository }}" \
+                       --label "org.opencontainers.image.authors=${{ env.GIT_AUTHOR }}" \
+                       --label "org.opencontainers.image.title=${{ github.event.repository.name }}" \
+                       --label "org.opencontainers.image.description=${{ env.COMMIT_MESSAGE }}" .
 
-      - name: Entrar no registro 
+      - name: Entrar no registro
         run: echo "${{ secrets.CONTAINER_REGISTRY_PASSWORD }}" | docker login ${{ secrets.CONTAINER_REGISTRY_ADDRESS }} -u "${{ secrets.CONTAINER_REGISTRY_USERNAME }}" --password-stdin
 
       - name: Enviar imagem para registro
-        run: docker push ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }}
+        run: |
+          docker push ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }}
+          docker push ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:latest
