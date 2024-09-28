@@ -23,7 +23,7 @@ public static class DependencyInjection
                 {
                     Name = "MIT"
                 },
-                Contact = new OpenApiContact()
+                Contact = new OpenApiContact
                 {
                     Name = "Brenno Martins"
                 }
@@ -33,10 +33,13 @@ public static class DependencyInjection
 
     public static void UsePresentation(this IApplicationBuilder app)
     {
+        var apiBasePath = Environment.GetEnvironmentVariable("API_BASE_PATH") ?? "";
+
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("v1/swagger.json", "Tô à toa API v1");
+            options.SwaggerEndpoint($"{apiBasePath}/swagger/v1/swagger.json", "Tô à toa API v1");
+            options.RoutePrefix = string.IsNullOrEmpty(apiBasePath) ? "swagger" : $"{apiBasePath}/swagger";
         });
     }
 }
