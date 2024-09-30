@@ -10,9 +10,16 @@ public static class DependencyInjection
         
         service.AddSwaggerGen(options =>
         {
+            var basePath = Environment.GetEnvironmentVariable("API_BASE_PATH") ?? "";   
+            
             var presentationAssembly = typeof(DependencyInjection).Assembly;
             var xmlFileName = $"{presentationAssembly.GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+            
+            options.AddServer(new OpenApiServer
+            {
+                Url = basePath
+            });
             
             options.SwaggerDoc("v1", new OpenApiInfo
             {
