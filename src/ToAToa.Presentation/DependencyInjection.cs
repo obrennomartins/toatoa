@@ -33,10 +33,12 @@ public static class DependencyInjection
 
     public static void UsePresentation(this IApplicationBuilder app)
     {
+        var basePath = Environment.GetEnvironmentVariable("API_BASE_PATH") ?? string.Empty;
+        
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("v1/swagger.json", "Tô à toa API v1");
+            options.SwaggerEndpoint($"{basePath}/swagger/v1/swagger.json", "Tô à toa API v1");
         });
     }
 }
