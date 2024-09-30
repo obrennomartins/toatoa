@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ToAToa.Application\ToAToa.Application.csproj" />
       <ProjectReference Include="..\ToAToa.DataAccess\ToAToa.DataAccess.csproj" />
     </ItemGroup>
 

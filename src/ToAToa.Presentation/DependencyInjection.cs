@@ -23,7 +23,7 @@ public static class DependencyInjection
                 {
                     Name = "MIT"
                 },
-                Contact = new OpenApiContact()
+                Contact = new OpenApiContact
                 {
                     Name = "Brenno Martins"
                 }
