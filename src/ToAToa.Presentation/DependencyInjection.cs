@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using ToAToa.Presentation.Middlewares;
 
 namespace ToAToa.Presentation;
 
@@ -45,6 +46,8 @@ public static class DependencyInjection
     {
         var basePath = Environment.GetEnvironmentVariable("API_BASE_PATH") ?? string.Empty;
         
+        app.UseMiddleware<RemoveVaziosJsonMiddleware>();
+
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
