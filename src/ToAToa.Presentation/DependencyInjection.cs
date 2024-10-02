@@ -20,6 +20,13 @@ public static class DependencyInjection
             {
                 Url = basePath
             });
+            if (!string.IsNullOrEmpty(basePath))
+            {
+                options.AddServer(new OpenApiServer
+                {
+                    Url = basePath
+                });
+            }
             
             options.SwaggerDoc("v1", new OpenApiInfo
             {
