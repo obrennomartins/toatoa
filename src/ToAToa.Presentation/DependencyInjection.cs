@@ -46,7 +46,7 @@ public static class DependencyInjection
     {
         var basePath = Environment.GetEnvironmentVariable("API_BASE_PATH") ?? string.Empty;
         
-        app.UseMiddleware<RemoveVaziosJsonMiddleware>();
+        app.UseMiddleware<RemoveNulosVaziosMiddleware>();
 
         app.UseSwagger();
         app.UseSwaggerUI(options =>
