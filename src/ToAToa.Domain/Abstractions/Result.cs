@@ -14,7 +14,7 @@ public class Result
         StateCode = stateCode;
     }
 
-    protected bool IsSuccess { get; }
+    public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
     public Error Error { get; }
     public int? StateCode { get; protected init; }

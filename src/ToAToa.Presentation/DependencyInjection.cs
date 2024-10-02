@@ -16,10 +16,6 @@ public static class DependencyInjection
             var xmlFileName = $"{presentationAssembly.GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
             
-            options.AddServer(new OpenApiServer
-            {
-                Url = basePath
-            });
             if (!string.IsNullOrEmpty(basePath))
             {
                 options.AddServer(new OpenApiServer
