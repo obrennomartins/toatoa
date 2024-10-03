@@ -21,5 +21,9 @@ RUN dotnet publish "./src/ToAToa.Presentation/ToAToa.Presentation.csproj" -c $BU
 
 FROM base AS final
 WORKDIR /app
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl --fail http://localhost:8080${API_BASE_PATH}/health || exit 1
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ToAToa.Presentation.dll"]
