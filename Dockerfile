@@ -6,6 +6,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /app
 
+COPY src/ToAToa.Application/ToAToa.Application.csproj src/ToAToa.Application/
 COPY src/ToAToa.DataAccess/ToAToa.DataAccess.csproj src/ToAToa.DataAccess/
 COPY src/ToAToa.Domain/ToAToa.Domain.csproj src/ToAToa.Domain/
 COPY src/ToAToa.Presentation/ToAToa.Presentation.csproj src/ToAToa.Presentation/
