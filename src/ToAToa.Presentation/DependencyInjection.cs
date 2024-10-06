@@ -10,6 +10,8 @@ public static class DependencyInjection
     {
         service.AddEndpointsApiExplorer();
 
+        service.AddHealthChecks();
+
         service.AddSwaggerGen(options =>
         {
             var basePath = Environment.GetEnvironmentVariable("API_BASE_PATH") ?? "";   
