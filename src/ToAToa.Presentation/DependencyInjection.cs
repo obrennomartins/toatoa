@@ -51,7 +51,7 @@ public static class DependencyInjection
         
         app.UseMiddleware<RemoveNulosVaziosMiddleware>();
 
-        app.MapHealthChecks($"{basePath}/health");
+        app.MapHealthChecks($"/health");
 
         app.RegisterAtividadeEndpoints();
         
