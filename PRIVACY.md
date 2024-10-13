@@ -119,4 +119,4 @@ português.
 Caso tenha dúvidas, preocupações ou queira exercer seus direitos previstos na 
 LGPD, entre em contato comigo:
 
-*E-mail: `toatoa [arroba] tal [ponto] etc [ponto] br`
+* E-mail: `toatoa [arroba] tal [ponto] etc [ponto] br`
