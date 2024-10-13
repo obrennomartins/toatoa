@@ -1,0 +1,12 @@
+version: "1.0"
+
+linter: jetbrains/qodana-cdnet:2024.2-eap
+
+dotnet:
+  solution: ToAToa.sln
+
+profile:
+  name: qodana.recommended
+
+include:
+  - name: CheckDependencyLicenses

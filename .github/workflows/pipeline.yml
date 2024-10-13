@@ -52,6 +52,7 @@ jobs:
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
+
   codacy:
     runs-on: ubuntu-latest
     needs: sonarcloud
@@ -83,9 +84,31 @@ jobs:
         run: |
           bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./TestResults/CoverageReport/Cobertura.xml
 
+  qodana:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2024.2
+        with:
+          pr-mode: false
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+          QODANA_ENDPOINT: 'https://qodana.cloud'
+
   docker:
     runs-on: ubuntu-latest
-    needs: codacy
+    needs: 
+      - sonarcloud
+      - codacy
+      - qodana
     steps:
       - name: Checar código
         uses: actions/checkout@v3
