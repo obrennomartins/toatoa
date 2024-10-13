@@ -55,7 +55,6 @@ jobs:
 
   codacy:
     runs-on: ubuntu-latest
-    needs: sonarcloud
     steps:
       - name: Verificar código
         uses: actions/checkout@v3
