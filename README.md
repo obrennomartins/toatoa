@@ -11,18 +11,17 @@ Uma API simples para ajudar você a encontrar atividades para fazer.
 
 ## Sobre
 
-O **[Tô à toa](https://e.tal.etc.br/ToAToa)** é um projeto em .NET Core que 
-permite encontrar coisas legais para se fazer. Não é necessário nenhum tipo de 
-autenticação e nem chave de acesso, basta enviar uma requisição para a API. 
+O **Tô à toa** é um projeto em .NET Core que permite encontrar coisas legais 
+para se fazer. Não é necessário nenhum tipo de autenticação e nem chave de 
+acesso, basta enviar uma requisição para a API. 
 
 Este projeto foi fortemente inspirado na 
 [Bored API](https://www.boredapi.com), mas com um toque de brasilidade. 
 
-O **[Tô à toa](https://e.tal.etc.br/ToAToa)** faz parte do portfólio de 
-projetos públicos de [Brenno Martins](https://tal.etc.br/eu). O objetivo é 
-usando .NET Core e outras tecnologias da Microsoft para documentar o 
-aprendizado.
+O principal objetivo é deste projeto é documentar o meu aprendizado com o .NET e outras 
+tecnologias da Microsoft, compartilhando conhecimento e boas práticas
 
+Para garantir a qualidade do código, são feitas análises estáticas do código-fonte com **[SonarQube](https://sonarcloud.io/project/overview?id=obrennomartins_toatoa)**, **[Qodana](https://qodana.cloud/projects/zqOdN)** e **[Codacy](https://app.codacy.com/gh/obrennomartins/toatoa/)**.
 
 ## Roteiro (roadmap)
 
