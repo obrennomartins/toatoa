@@ -101,7 +101,6 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
           QODANA_ENDPOINT: 'https://qodana.cloud'
-
   docker:
     runs-on: ubuntu-latest
     needs: 
@@ -139,3 +138,11 @@ jobs:
         run: |
           docker push ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }}
           docker push ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:latest
+
+  deploy:
+    needs: docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aciona webhook do Portainer
+        run: |
+          curl -X POST ${{ secrets.PORTAINER_WEBHOOK_URL }}
