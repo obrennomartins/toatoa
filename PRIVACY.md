@@ -1,6 +1,6 @@
 # Política de privacidade
 
-**Última atualização:** 13 de outubro de 2024
+**Última atualização:** 11 de dezembro de 2024
 
 Eu, Brenno Martins, estou comprometido em proteger sua privacidade e seus 
 dados pessoais, conforme a Lei Geral de Proteção de Dados (Lei n.º 13.709/2018 
@@ -11,12 +11,11 @@ e protejo as informações fornecidas por meus usuários.
 ## 1. Coleta de Informações
 
 O “Tô à toa” pode coletar informações em diferentes formas, dependendo da 
-plataforma utilizada (Skill Alexa, aplicação web ou API). Em geral, **não 
-coleto dados pessoais identificáveis** diretamente, como nome ou endereço de 
-e-mail.
+plataforma utilizada (Skill Alexa, aplicação web ou API). A partir da criação de 
+contas de usuário, **coleto dados pessoais identificáveis**, como nome e endereço 
+de e-mail.
 
-As seguintes informações podem ser coletadas indiretamente, de maneira anônima 
-ou agregada:
+As seguintes informações podem ser coletadas:
 
 * **Interações com a Skill Alexa** (ex.: comandos de voz, solicitações).
 * **Interações com a aplicação web** (ex.: atividades visualizadas ou 
@@ -32,7 +31,11 @@ As informações coletadas são utilizadas exclusivamente para:
 * **Fornecer as sugestões de atividades** solicitadas pelo usuário em qualquer 
 das plataformas.
 * **Melhorar a experiência e desempenho** dos serviços, identificando 
-preferências e ajustando sugestões com base em dados anônimos
+preferências e ajustando sugestões com base em dados anônimos.
+* **Permitir a criaçao e gestão de contas** de usuário, incluindo o envio de 
+notificações e comunicações relacionadas à conta e ao serviço.
+* **Personalizar a experiência** de usuário, permitindo a criação de listas de 
+atividades personalizadas com base nas informações inseridas pelo usuário.
 
 Todos os dados são tratados conforme as bases legais da LGPD, respeitando o 
 princípio da minimização e sendo usados somente para os fins descritos.
@@ -85,38 +88,45 @@ As informações são retidas apenas pelo tempo necessário para a finalidade pa
 a qual foram coletadas ou conforme exigido por lei, conforme o princípio da 
 necessidade estabelecido pela LGPD.
 
-## 8. Alterações no Serviço
-
-O serviço pode ser alterado, suspenso ou descontinuado a qualquer momento, sem 
-aviso. Como o projeto é pessoal e sem fins comerciais, não há obrigação de 
-manutenção ou suporte.
-
-## 9. Alterações a esta Política
+## 8. Alterações a esta Política
 
 Posso modificar esta Política de Privacidade a qualquer momento. As alterações 
 serão informadas através da data de atualização. Recomendo que revise 
 regularmente esta Política para se manter informado(a).
 
-## 10. Direitos de Propriedade e Licença
+O histórico das versões anteriores desta Política de Privacidade pode ser 
+encontrado no repositório do projeto no GitHub. A seguir, está um resumo das 
+últimas alterações:
+
+* **11 de dezembro de 2024** (esta versão): Atualização para incluir a coleta 
+de informações identificáveis. Adição de seções sobre a finalidade do 
+tratamento de dados e de histórico desta Política. Remoção de seção redundante. 
+* **13 de outubro de 2024**: Criação da Política de Privacidade.
+
+## 9. Direitos de Propriedade e Licença
 
 O “Tô à toa” é licenciado sob a **Licença MIT**. Isso significa que você tem 
 permissão para copiar, modificar, publicar e distribuir o código, caso inclua 
-uma cópia da licença em todas as versões ou partes substanciais do software.
+uma cópia da licença em todas as versões ou partes substanciais do _software_.
 
 **Condições principais da Licença MIT**:
 
-* A licença permite o uso livre do software para qualquer finalidade, 
-incluindo fins comerciais, desde que os avisos de copyright e isenção de 
+* A licença permite o uso livre do _software_ para qualquer finalidade, 
+incluindo fins comerciais, desde que os avisos de _copyright_ e isenção de 
 responsabilidade sejam mantidos.
-* O software é fornecido “como está”, sem garantias de qualquer tipo, expressa 
-ou implícita.
+* O _software_ é fornecido “como está”, sem garantias de qualquer tipo, 
+expressa ou implícita.
 
 Para mais detalhes, você pode acessar o texto completo da Licença MIT em 
 português.
 
-## 11. Contato
+## 10. Contato
 
 Caso tenha dúvidas, preocupações ou queira exercer seus direitos previstos na 
 LGPD, entre em contato comigo:
 
-* E-mail: `toatoa [arroba] tal [ponto] etc [ponto] br`
+* E-mail: `toatoa [arroba] tal [ponto] etc [ponto] br`.
+
+## 11. Histórico de alterações
+
+
