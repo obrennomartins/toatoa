@@ -129,14 +129,6 @@ jobs:
                        --label "org.opencontainers.image.title=${{ github.event.repository.name }}" \
                        --label "org.opencontainers.image.description=${{ env.COMMIT_MESSAGE }}" .
 
-      - name: Entrar no registro
-        run: echo "${{ secrets.CONTAINER_REGISTRY_PASSWORD }}" | docker login ${{ secrets.CONTAINER_REGISTRY_ADDRESS }} -u "${{ secrets.CONTAINER_REGISTRY_USERNAME }}" --password-stdin
-
-      - name: Enviar imagem para registro
-        run: |
-          docker push ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:${{ env.BRANCH_NAME }}
-          docker push ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:latest
-
   deploy:
     needs: docker
     runs-on: ubuntu-latest
