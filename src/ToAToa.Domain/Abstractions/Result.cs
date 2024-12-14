@@ -2,7 +2,11 @@ namespace ToAToa.Domain.Abstractions;
 
 public class Result
 {
-    protected Result(bool isSuccess, Error error, int? stateCode = null)
+    protected Result (bool isSuccess, Error error) : this(isSuccess, error, null)
+    {
+    }
+
+    protected Result(bool isSuccess, Error error, int? stateCode)
     {
         if ((isSuccess && error != Error.None) || (!isSuccess && error == Error.None))
         {
@@ -23,9 +27,13 @@ public class Result
 
     public static Result<TData> Success<TData>(TData data) => new(data, true, Error.None);
 
-    public static Result Failure(Error error, int? statusCode = null) => new(false, error, statusCode);
+    public static Result Failure(Error error) => new(false, error);
 
-    public static Result<TValue> Failure<TValue>(Error error, int? statusCode = null) => new(default, false, error, statusCode);
+    public static Result Failure(Error error, int? statusCode) => new(false, error, statusCode);
+
+    public static Result<TValue> Failure<TValue>(Error error) => new(default, false, error);
+
+    public static Result<TValue> Failure<TValue>(Error error, int? statusCode) => new(default, false, error, statusCode);
 
     public static Result<TData> Create<TData>(TData? data) =>
         data is not null
@@ -36,8 +44,11 @@ public class Result
 public class Result<TData> : Result 
 {
     private readonly TData? _data;
+    protected internal Result(TData? data, bool isSuccess, Error error) : this(data, isSuccess, error, null) 
+    {
+    }
 
-    protected internal Result(TData? data, bool isSuccess, Error error, int? stateCode = null) : base(isSuccess, error)
+    protected internal Result(TData? data, bool isSuccess, Error error, int? stateCode) : base(isSuccess, error)
     {
         _data = data;
         StateCode = stateCode;

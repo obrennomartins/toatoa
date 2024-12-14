@@ -11,7 +11,7 @@ public class ToAToaDbContext(DbContextOptions<ToAToaDbContext> options, IConfigu
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
 
-    public DbSet<Atividade> Atividades { get; init; }
+    public DbSet<Atividade> Atividades { get; init; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

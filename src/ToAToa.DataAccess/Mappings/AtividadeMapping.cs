@@ -9,7 +9,7 @@ public class AtividadeMapping : IEntityTypeConfiguration<Atividade>
     public void Configure(EntityTypeBuilder<Atividade> builder)
     {
         builder.ToTable("Atividade");
-        
+
         builder.HasKey(atividade => atividade.Id);
 
         builder.Property(atividade => atividade.Descricao)

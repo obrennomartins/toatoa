@@ -133,7 +133,9 @@ public class RemoveNulosVaziosMiddleware(RequestDelegate next)
                 return element.GetString();
             case JsonValueKind.Number:
                 if (element.TryGetInt64(out var l))
+                {
                     return l;
+                }
                 return element.GetDouble();
             case JsonValueKind.True:
             case JsonValueKind.False:
