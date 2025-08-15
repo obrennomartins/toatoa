@@ -1,4 +1,4 @@
-# [Tô à toa](https://e.tal.etc.br/ToAToa)
+# Tô à toa
 
 Uma API simples para ajudar você a encontrar atividades para fazer.
 
@@ -26,8 +26,8 @@ Para garantir a qualidade do código, são feitas análises estáticas do códig
 
 ## Roteiro (roadmap)
 
-- [x] Backend e API básica
-- [ ] Skill Alexa
+- [x] Backend e API básica ([ambiente de testes](http://eita.vix.br/toatoa/api/v1/atividades/aleatoria))
+- [x] Skill Alexa ([já disponível na Alexa Skills Store](https://www.amazon.com.br/dp/B0DM2GPXZH/))
 - [ ] Frontend básico
 - [ ] Autenticação e atividades personalizadas
 - [ ] Registros de auditoria
