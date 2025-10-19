@@ -8,26 +8,36 @@ public static class DependencyInjection
 {
     public static void AddPresentation(this IServiceCollection service)
     {
+        service.AddCors(options =>
+        {
+            options.AddPolicy("AllowAnyOrigin",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+        });
+
         service.AddEndpointsApiExplorer();
 
         service.AddHealthChecks();
 
         service.AddSwaggerGen(options =>
         {
-            var basePath = Environment.GetEnvironmentVariable("API_BASE_PATH") ?? "";   
-            
-            var presentationAssembly = typeof(DependencyInjection).Assembly;
-            var xmlFileName = $"{presentationAssembly.GetName().Name}.xml";
+            var configuration = service.BuildServiceProvider().GetRequiredService<IConfiguration>();
+            var absoluteServerPath = configuration["SERVER:ABSOLUTE_PATH"]?.TrimEnd('/') ?? "";     
+            var xmlFileName = $"{typeof(DependencyInjection).Assembly.GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 
-            if (!string.IsNullOrEmpty(basePath))
+            if (!string.IsNullOrEmpty(absoluteServerPath))
             {
                 options.AddServer(new OpenApiServer
                 {
-                    Url = basePath
+                    Url = absoluteServerPath,
                 });
             }
-            
+
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
@@ -47,18 +57,16 @@ public static class DependencyInjection
 
     public static void UsePresentation(this WebApplication app)
     {
-        var basePath = Environment.GetEnvironmentVariable("API_BASE_PATH") ?? string.Empty;
+        var relativeServerPath = app.Configuration["SERVER:RELATIVE_PATH"]?.TrimEnd('/') ?? string.Empty;
         
         app.UseMiddleware<RemoveNulosVaziosMiddleware>();
-
+        app.UseCors("AllowAnyOrigin");
         app.MapHealthChecks("/health");
-
         app.RegisterAtividadeEndpoints();
-        
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint($"{basePath}/swagger/v1/swagger.json", "Tô à toa API v1");
+            options.SwaggerEndpoint($"{relativeServerPath}/swagger/v1/swagger.json", "Tô à toa API v1");
         });
     }
 }
