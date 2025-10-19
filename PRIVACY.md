@@ -44,8 +44,8 @@ princípio da minimização e sendo usados somente para os fins descritos.
 
 Eu **não compartilho** dados pessoais com terceiros, exceto:
 
-- Quando exigido por lei ou por autoridades competentes.
-- Para proteger nossos direitos, segurança ou propriedade.
+* Quando exigido por lei ou por autoridades competentes.
+* Para proteger nossos direitos, segurança ou propriedade.
 
 No entanto, para fornecer o serviço “Tô à toa” de forma eficiente e segura, 
 utilizo parceiros terceirizados que podem tratar informações relacionadas ao 
@@ -128,5 +128,3 @@ LGPD, entre em contato comigo:
 * E-mail: `toatoa [arroba] tal [ponto] etc [ponto] br`.
 
 ## 11. Histórico de alterações
-
-
