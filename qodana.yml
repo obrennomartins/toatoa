@@ -1,6 +1,6 @@
 version: "1.0"
 
-linter: jetbrains/qodana-cdnet:2024.2
+linter: jetbrains/qodana-cdnet
 
 dotnet:
   solution: ToAToa.sln
