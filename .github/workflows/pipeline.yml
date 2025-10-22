@@ -50,7 +50,7 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"obrennomartins_toatoa" /o:"obrennomartins" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.opencover.xml"
           dotnet build
-          dotnet test --no-build --collect:"XPlat Code Coverage" --results-directory TestResults
+          dotnet test --no-build --collect:"XPlat Code Coverage" --results-directory TestResults /p:CoverletOutputFormat=opencover
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
 
@@ -68,21 +68,18 @@ jobs:
       - name: Restaurar dependências
         run: dotnet restore
 
-      - name: Executar testes unitários com cobertura
+      - name: Executar testes e gerar cobertura para Codacy
         run: dotnet test --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults
-
-      - name: Instalar ReportGenerator
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
-
-      - name: Gerar relatório de cobertura no formato Cobertura
-        run: |
-          reportgenerator "-reports:./TestResults/**/coverage.cobertura.xml" "-targetdir:./TestResults/CoverageReport" -reporttypes:Cobertura
 
       - name: Upload de cobertura de testes para o Codacy
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
-          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./TestResults/CoverageReport/Cobertura.xml
+          # O script do Codacy procura pelo arquivo coverage.xml no formato 'cobertura'
+          # O comando 'dotnet test' acima gera 'coverage.cobertura.xml', então precisamos encontrar o caminho exato
+          COVERAGE_FILE=$(find ./TestResults -name "coverage.cobertura.xml")
+          echo "Encontrado arquivo de cobertura em: $COVERAGE_FILE"
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r $COVERAGE_FILE
 
   qodana:
     runs-on: ubuntu-latest
