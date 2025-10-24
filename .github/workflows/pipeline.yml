@@ -39,8 +39,8 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          New-Item -Path .\.sonar\scanner -ItemType Directory -Force
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner --version 7.1.1
 
       - name: Compilar e analisar
         env:
@@ -48,9 +48,25 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"obrennomartins_toatoa" /o:"obrennomartins" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.opencover.xml"
+          Write-Host "Diretório atual: $(Get-Location)"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"obrennomartins_toatoa" /o:"obrennomartins" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.opencover.xml" /d:sonar.verbose=true
+          
+          if (Test-Path ".sonarqube\conf\SonarQubeAnalysisConfig.xml") {
+            Write-Host "Arquivo de configuração criado com sucesso"
+          } else {
+            Write-Host "AVISO: Arquivo de configuração NÃO foi criado!"
+          }
+          
           dotnet build ToAToa.sln --no-incremental -c Release
           dotnet test ToAToa.sln --configuration Release --collect:"XPlat Code Coverage" --results-directory TestResults --logger "trx;LogFileName=unittests.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          
+          Write-Host "Verificando arquivo antes do end:"
+          if (Test-Path ".sonarqube\conf\SonarQubeAnalysisConfig.xml") {
+            Write-Host "Arquivo ainda existe"
+          } else {
+            Write-Host "ERRO: Arquivo foi removido ou nunca existiu!"
+          }
+          
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   codacy:
