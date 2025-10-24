@@ -40,7 +40,7 @@ jobs:
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory -Force
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner --version 7.1.1
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
       - name: Compilar e analisar
         env:
@@ -52,19 +52,10 @@ jobs:
             /k:"obrennomartins_toatoa" `
             /o:"obrennomartins" `
             /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.opencover.xml"
-          
-          dotnet build ToAToa.sln --no-incremental -c Release
-          
-          dotnet test ToAToa.sln `
-            --configuration Release `
-            --collect:"XPlat Code Coverage" `
-            --results-directory TestResults `
-            --logger "trx;LogFileName=unittests.trx" `
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-          
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            /d:sonar.login="$env:SONAR_TOKEN"
+          dotnet build ToAToa.sln -c Release          
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="$env:SONAR_TOKEN"
+
   codacy:
     runs-on: ubuntu-latest
     steps:
