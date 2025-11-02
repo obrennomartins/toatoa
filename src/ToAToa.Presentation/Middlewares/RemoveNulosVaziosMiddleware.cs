@@ -7,6 +7,17 @@ namespace ToAToa.Presentation.Middlewares;
 
 public class RemoveNulosVaziosMiddleware(RequestDelegate next)
 {
+    private static readonly JsonSerializerOptions DeserializeOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
+    private static readonly JsonSerializerOptions SerializeOptions = new()
+    {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        WriteIndented = true
+    };
+
     public async Task InvokeAsync(HttpContext context)
     {
         var originalBodyStream = context.Response.Body;
@@ -23,18 +34,11 @@ public class RemoveNulosVaziosMiddleware(RequestDelegate next)
             var bodyText = await new StreamReader(tempBody).ReadToEndAsync();
             if (!string.IsNullOrWhiteSpace(bodyText))
             {
-                var obj = JsonSerializer.Deserialize<object>(bodyText, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+                var obj = JsonSerializer.Deserialize<object>(bodyText, DeserializeOptions);
 
                 var cleanedObj = RemoveEmptyProperties(obj);
 
-                var responseJson = JsonSerializer.Serialize(cleanedObj, new JsonSerializerOptions
-                {
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                    WriteIndented = true
-                });
+                var responseJson = JsonSerializer.Serialize(cleanedObj, SerializeOptions);
 
                 context.Response.Body = originalBodyStream;
                 await context.Response.WriteAsync(responseJson);
@@ -47,47 +51,62 @@ public class RemoveNulosVaziosMiddleware(RequestDelegate next)
         }
     }
 
-    private object? RemoveEmptyProperties(object? obj)
+    private static object? RemoveEmptyProperties(object? obj)
     {
-        if (obj == null)
+        switch (obj)
         {
-            return null;
-        }
-        
-        if (obj is JsonElement jsonElement)
-        {
-            obj = ConvertJsonElement(jsonElement);
-        }
+            case null:
+                return null;
 
-        if (obj is IDictionary<string, object> dict)
-        {
-            var keysToRemove = dict
-                .Where(kvp => IsEmpty(kvp.Value))
-                .Select(kvp => kvp.Key)
-                .ToList();
-
-            foreach (var key in keysToRemove)
+            case JsonElement jsonElement:
             {
-                dict.Remove(key);
+                obj = ConvertJsonElement(jsonElement);
+                if (obj == null)
+                {
+                    return null;
+                }
+                break;
+            }
+        }
+
+        switch (obj)
+        {
+            case IDictionary<string, object> dict:
+            {
+                var keysToRemove = dict
+                    .Where(kvp => IsEmpty(kvp.Value))
+                    .Select(kvp => kvp.Key)
+                    .ToList();
+
+                foreach (var key in keysToRemove)
+                {
+                    dict.Remove(key);
+                }
+
+                foreach (var key in dict.Keys.ToList())
+                {
+                    dict[key] = RemoveEmptyProperties(dict[key])!;
+                }
+
+                return dict;
             }
 
-            return dict;
+            case IEnumerable<object> list:
+                return list
+                    .Select(RemoveEmptyProperties)
+                    .Where(item => !IsEmpty(item))
+                    .ToList();
         }
 
-        if (obj is IEnumerable<object> list)
-        {
-            return list.Where(item => !IsEmpty(item)).ToList();
-        }
-
-        var properties = obj?.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+        var properties = obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
             .Where(prop => prop is { CanRead: true, CanWrite: true })
             .ToList();
 
-        foreach (var property in properties ?? [])
+        foreach (var property in properties)
         {
             var value = property.GetValue(obj);
 
-            if (value == null || IsEmpty(value))
+            if (IsEmpty(value))
             {
                 property.SetValue(obj, null);
             }
@@ -100,51 +119,24 @@ public class RemoveNulosVaziosMiddleware(RequestDelegate next)
 
         return obj;
     }
-
-    private bool IsEmpty(object? value)
-    {
-        if (value == null)
+    private static bool IsEmpty(object? value) =>
+        value switch
         {
-            return true;
-        }
+            null => true,
+            string str when string.IsNullOrWhiteSpace(str) => true,
+            IEnumerable enumerable and not string => !enumerable.Cast<object>().Any(),
+            _ => false
+        };
 
-        if (value is string str && string.IsNullOrWhiteSpace(str))
+    private static object? ConvertJsonElement(JsonElement element) =>
+        element.ValueKind switch
         {
-            return true;
-        }
-
-        if (value is IEnumerable enumerable && !enumerable.Cast<object>().Any())
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private object? ConvertJsonElement(JsonElement element)
-    {
-        switch (element.ValueKind)
-        {
-            case JsonValueKind.Object:
-                return element.EnumerateObject().ToDictionary(p => p.Name, p => ConvertJsonElement(p.Value));
-            case JsonValueKind.Array:
-                return element.EnumerateArray().Select(ConvertJsonElement).ToList();
-            case JsonValueKind.String:
-                return element.GetString();
-            case JsonValueKind.Number:
-                if (element.TryGetInt64(out var l))
-                {
-                    return l;
-                }
-                return element.GetDouble();
-            case JsonValueKind.True:
-            case JsonValueKind.False:
-                return element.GetBoolean();
-            case JsonValueKind.Null:
-                return null;
-            case JsonValueKind.Undefined:
-            default:
-                return element.GetRawText();
-        }
-    }
+            JsonValueKind.Object => element.EnumerateObject().ToDictionary(p => p.Name, p => ConvertJsonElement(p.Value)),
+            JsonValueKind.Array => element.EnumerateArray().Select(ConvertJsonElement).ToList(),
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.Number => element.TryGetInt64(out var l) ? l : element.GetDouble(),
+            JsonValueKind.True or JsonValueKind.False => element.GetBoolean(),
+            JsonValueKind.Null => null,
+            _ => element.GetRawText()
+        };
 }

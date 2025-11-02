@@ -2,11 +2,7 @@ namespace ToAToa.Domain.Abstractions;
 
 public class Result
 {
-    protected Result (bool isSuccess, Error error) : this(isSuccess, error, null)
-    {
-    }
-
-    protected Result(bool isSuccess, Error error, int? stateCode)
+    protected Result(bool isSuccess, Error error, int? stateCode = null)
     {
         if ((isSuccess && error != Error.None) || (!isSuccess && error == Error.None))
         {
@@ -44,11 +40,8 @@ public class Result
 public class Result<TData> : Result 
 {
     private readonly TData? _data;
-    protected internal Result(TData? data, bool isSuccess, Error error) : this(data, isSuccess, error, null) 
-    {
-    }
 
-    protected internal Result(TData? data, bool isSuccess, Error error, int? stateCode) : base(isSuccess, error)
+    protected internal Result(TData? data, bool isSuccess, Error error, int? stateCode = null) : base(isSuccess, error)
     {
         _data = data;
         StateCode = stateCode;
