@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using ToAToa.DataAccess;
 using ToAToa.Presentation.Endpoints;
 using ToAToa.Presentation.Middlewares;
 
@@ -21,7 +22,8 @@ public static class DependencyInjection
 
         service.AddEndpointsApiExplorer();
 
-        service.AddHealthChecks();
+        service.AddHealthChecks()
+            .AddDbContextCheck<ToAToaDbContext>();
 
         service.AddSwaggerGen(options =>
         {
