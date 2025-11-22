@@ -53,19 +53,17 @@ public class RemoveNulosVaziosMiddleware(RequestDelegate next)
 
     private static object? RemoveEmptyProperties(object? obj)
     {
-        switch (obj)
+        if (obj is null)
         {
-            case null:
-                return null;
+            return null;
+        }
 
-            case JsonElement jsonElement:
+        if (obj is JsonElement jsonElement)
+        {
+            obj = ConvertJsonElement(jsonElement);
+            if (obj == null)
             {
-                obj = ConvertJsonElement(jsonElement);
-                if (obj == null)
-                {
-                    return null;
-                }
-                break;
+                return null;
             }
         }
 
