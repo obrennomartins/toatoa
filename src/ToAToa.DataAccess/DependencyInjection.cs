@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ToAToa.DataAccess.Caching;
 using ToAToa.DataAccess.Repositories;
 using ToAToa.Domain.Interfaces;
 
@@ -13,7 +14,9 @@ public static class DependencyInjection
         service.AddDbContext<ToAToaDbContext>(options =>
             options.UseNpgsql(configuration["ConnectionStrings:POSTGRESQLCONNSTR_ToAToaDb"]));
 
+        service.AddScoped<ICacheService, CacheService>();
+
         // Repositórios
-        service.AddScoped<IAtividadeRepository, AtividadeRepository>();
+        service.AddScoped<AtividadeRepository>();
     }
 }

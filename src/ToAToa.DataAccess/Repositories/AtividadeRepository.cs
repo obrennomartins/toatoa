@@ -16,4 +16,10 @@ public class AtividadeRepository(ToAToaDbContext dbContext) : IAtividadeReposito
 
         return atividadeAleatoria;
     }
+
+    public async Task<int> ObterTotalAtividadesAsync() =>
+        await dbContext.Atividades.CountAsync();
+
+    public async Task<Atividade?> ObterAtividadePorSkipAsync(int skip) =>
+        await dbContext.Atividades.OrderBy(a => a.Id).Skip(skip).FirstOrDefaultAsync();
 }

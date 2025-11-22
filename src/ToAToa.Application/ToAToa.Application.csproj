@@ -10,9 +10,11 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
       <PackageReference Include="MediatR" Version="12.4.1" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.11" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ToAToa.DataAccess\ToAToa.DataAccess.csproj" />
       <ProjectReference Include="..\ToAToa.Domain\ToAToa.Domain.csproj" />
     </ItemGroup>
 
