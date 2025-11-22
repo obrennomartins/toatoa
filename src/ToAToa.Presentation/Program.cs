@@ -6,9 +6,11 @@ using ToAToa.Presentation;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDomain();
-builder.Services.AddDataAccess();
+builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddPresentation();
+
+builder.Logging.AddPresentationLogging();
 
 var app = builder.Build();
 

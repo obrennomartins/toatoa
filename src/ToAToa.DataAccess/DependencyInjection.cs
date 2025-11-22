@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToAToa.DataAccess.Repositories;
 using ToAToa.Domain.Interfaces;
@@ -6,9 +8,10 @@ namespace ToAToa.DataAccess;
 
 public static class DependencyInjection
 {
-    public static void AddDataAccess(this IServiceCollection service)
+    public static void AddDataAccess(this IServiceCollection service, IConfiguration configuration)
     {
-        service.AddDbContext<ToAToaDbContext>();
+        service.AddDbContext<ToAToaDbContext>(options =>
+            options.UseNpgsql(configuration["ConnectionStrings:POSTGRESQLCONNSTR_ToAToaDb"]));
 
         // Repositórios
         service.AddScoped<IAtividadeRepository, AtividadeRepository>();
