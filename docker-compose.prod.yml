@@ -1,0 +1,9 @@
+services:
+  api:
+    container_name: "toatoa-api"
+    image: ${PRIVATE_REGISTRY_IMAGENAME}:latest
+    ports:
+      - "${HOST_PORT:-8080}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__POSTGRESQLCONNSTR_ToAToaDb: ${POSTGRESQLCONNSTR_ToAToaDb}
