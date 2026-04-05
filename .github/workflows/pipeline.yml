@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Esteira de integração e desenvolvimento contínuos
 
 on:
   push:
@@ -105,36 +105,48 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - sonarcloud
       - codacy
       - qodana
     steps:
       - name: Checar código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Definir variáveis de metadados
-        id: vars
-        run: |
-          echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
-          echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV
-          echo "GIT_AUTHOR=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+      - name: Configurar QEMU
+        uses: docker/setup-qemu-action@v3
 
-      - name: Construir imagem Docker
-        run: |
-          docker build -t ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:${{ env.BRANCH_NAME }} \
-                       -t ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}/${{ secrets.CONTAINER_REGISTRY_NAMESPACE }}/${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:latest \
-                       --label "org.opencontainers.image.created=${{ env.BUILD_DATE }}" \
-                       --label "org.opencontainers.image.source=${{ github.repository }}" \
-                       --label "org.opencontainers.image.authors=${{ env.GIT_AUTHOR }}" \
-                       --label "org.opencontainers.image.title=${{ github.event.repository.name }}" \
-                       --label "org.opencontainers.image.description=${{ env.COMMIT_MESSAGE }}" .
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Entrar no registro de contêineres
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.CONTAINER_REGISTRY_ADDRESS }}
+          username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+
+      - name: Construir e enviar imagem de contêiner
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:latest
+            ${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:${{ github.ref_name }}
+            ${{ secrets.CONTAINER_REGISTRY_IMAGE_NAME }}:build-${{ github.run_number }}
+          labels: |
+            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.authors=${{ github.event.head_commit.author.name }}
+            org.opencontainers.image.title=${{ github.event.repository.name }}
+            org.opencontainers.image.description=${{ github.event.head_commit.message }}
 
   deploy:
     needs: docker
     runs-on: ubuntu-latest
     steps:
-      - name: Aciona webhook do Portainer
+      - name: Acionar webhook do Portainer
         run: |
           curl -X POST ${{ secrets.PORTAINER_WEBHOOK_URL }}
