@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ToAToa.DataAccess;
 
 #nullable disable
@@ -17,29 +16,30 @@ namespace ToAToa.DataAccess.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasDefaultSchema("TOATOA");
 
             modelBuilder.Entity("ToAToa.Domain.Entities.Atividade", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("ID")
+                        .HasAnnotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1");
 
                     b.Property<bool>("Ativo")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BOOLEAN")
+                        .HasColumnName("ATIVO");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasColumnName("DESCRICAO");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Atividade", (string)null);
+                    b.ToTable("ATIVIDADE", (string)null);
 
                     b.HasData(
                         new

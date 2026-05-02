@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -14,22 +13,24 @@ namespace ToAToa.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Atividade",
+                name: "ATIVIDADE",
+                schema: "TOATOA",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Descricao = table.Column<string>(type: "text", maxLength: 50, nullable: false),
-                    Ativo = table.Column<bool>(type: "boolean", nullable: false)
+                    ID = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    DESCRICAO = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
+                    ATIVO = table.Column<bool>(type: "BOOLEAN", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Atividade", x => x.Id);
+                    table.PrimaryKey("PK_ATIVIDADE", x => x.ID);
                 });
 
             migrationBuilder.InsertData(
-                table: "Atividade",
-                columns: new[] { "Id", "Ativo", "Descricao" },
+                table: "ATIVIDADE",
+                schema: "TOATOA",
+                columns: new[] { "ID", "ATIVO", "DESCRICAO" },
                 values: new object[,]
                 {
                     { 1, true, "Participar uma roda de samba" },
@@ -89,7 +90,8 @@ namespace ToAToa.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Atividade");
+                name: "ATIVIDADE",
+                schema: "TOATOA");
         }
     }
 }

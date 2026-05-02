@@ -5,17 +5,12 @@ namespace ToAToa.DataAccess;
 
 public class ToAToaDbContext(DbContextOptions<ToAToaDbContext> options) : DbContext(options)
 {
-    static ToAToaDbContext()
-    {
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-    }
-
     public DbSet<Atividade> Atividades { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("TOATOA");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ToAToaDbContext).Assembly);
-
         ToAToaDbSeeder.Seeder(modelBuilder);
         
         base.OnModelCreating(modelBuilder);

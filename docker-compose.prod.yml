@@ -6,4 +6,6 @@ services:
       - "${HOST_PORT:-8080}:8080"
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__POSTGRESQLCONNSTR_ToAToaDb: ${POSTGRESQLCONNSTR_ToAToaDb}
+      ConnectionStrings__ORACLECONNSTR_ToAToaDb: ${ORACLECONNSTR_ToAToaDb}
+    volumes:
+      - "${ORACLE_WALLET_PATH:-/opt/toatoa/wallet}:/app/wallet:ro"

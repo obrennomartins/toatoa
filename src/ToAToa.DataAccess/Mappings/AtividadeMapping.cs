@@ -8,13 +8,20 @@ public class AtividadeMapping : IEntityTypeConfiguration<Atividade>
 {
     public void Configure(EntityTypeBuilder<Atividade> builder)
     {
-        builder.ToTable("Atividade");
+        builder.ToTable("ATIVIDADE");
 
         builder.HasKey(atividade => atividade.Id);
 
+        builder.Property(atividade => atividade.Id)
+            .HasColumnName("ID");
+
         builder.Property(atividade => atividade.Descricao)
+            .HasColumnName("DESCRICAO")
             .IsRequired()
-            .HasColumnType("text")
+            .HasColumnType("NVARCHAR2(50)")
             .HasMaxLength(50);
+
+        builder.Property(atividade => atividade.Ativo)
+            .HasColumnName("ATIVO");
     }
 }
