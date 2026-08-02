@@ -8,18 +8,8 @@ public static class SwaggerConfigurations
     {
         service.AddSwaggerGen(options =>
         {
-            var configuration = service.BuildServiceProvider().GetRequiredService<IConfiguration>();
-            var absoluteServerPath = configuration["SERVER:ABSOLUTE_PATH"]?.TrimEnd('/') ?? "";
             var xmlFileName = $"{typeof(DependencyInjection).Assembly.GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
-
-            if (!string.IsNullOrEmpty(absoluteServerPath))
-            {
-                options.AddServer(new OpenApiServer
-                {
-                    Url = absoluteServerPath,
-                });
-            }
 
             options.SwaggerDoc("v1", new OpenApiInfo
             {
@@ -40,12 +30,24 @@ public static class SwaggerConfigurations
 
     public static void UseSwaggerConfiguration(this WebApplication app)
     {
-        var relativeServerPath = app.Configuration["SERVER:RELATIVE_PATH"]?.TrimEnd('/') ?? string.Empty;
+        app.UseSwagger(options =>
+        {
+            options.PreSerializeFilters.Add((document, request) =>
+            {
+                var pathBase = request.PathBase.Value?.TrimEnd('/');
+                document.Servers =
+                [
+                    new OpenApiServer
+                    {
+                        Url = string.IsNullOrEmpty(pathBase) ? "/" : pathBase
+                    }
+                ];
+            });
+        });
 
-        app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint($"{relativeServerPath}/swagger/v1/swagger.json", "Tô à toa API v1");
+            options.SwaggerEndpoint("v1/swagger.json", "Tô à toa API v1");
         });
     }
 }

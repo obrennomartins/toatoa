@@ -7,8 +7,10 @@ namespace ToAToa.Presentation;
 
 public static class DependencyInjection
 {
-    public static void AddPresentation(this IServiceCollection service)
+    public static void AddPresentation(this IServiceCollection service, IConfiguration configuration)
     {
+        service.AddForwardedHeadersConfiguration(configuration);
+
         service.AddCors(options =>
         {
             options.AddPolicy("AllowAnyOrigin",
@@ -30,6 +32,7 @@ public static class DependencyInjection
 
     public static void UsePresentation(this WebApplication app)
     {
+        app.UseForwardedHeaders();
         app.UseMiddleware<RemoveNulosVaziosMiddleware>();
         app.UseCors("AllowAnyOrigin");
         app.MapHealthChecks("/health");

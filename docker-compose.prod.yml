@@ -7,5 +7,6 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__ORACLECONNSTR_ToAToaDb: ${ORACLECONNSTR_ToAToaDb}
+      ReverseProxy__KnownProxies__0: ${REVERSE_PROXY_IP:-}
     volumes:
       - "${ORACLE_WALLET_PATH:-/opt/toatoa/wallet}:/app/wallet:ro"
