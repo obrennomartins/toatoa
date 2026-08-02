@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ToAToa.Application.Decorators;
 using ToAToa.DataAccess.Repositories;
@@ -7,12 +8,20 @@ namespace ToAToa.Application;
 
 public static class DependencyInjection
 {
-    public static void AddApplication(this IServiceCollection service)
+    public static void AddApplication(this IServiceCollection service, IConfiguration configuration)
     {
         var assembly = typeof(DependencyInjection).Assembly;
 
-        service.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(assembly));
-        service.AddAutoMapper(assembly);
+        service.AddMediatR(mediatRConfiguration => mediatRConfiguration.RegisterServicesFromAssembly(assembly));
+        service.AddAutoMapper(mapperConfiguration =>
+        {
+            var licenseKey = configuration["AutoMapper:LicenseKey"];
+
+            if (!string.IsNullOrWhiteSpace(licenseKey))
+            {
+                mapperConfiguration.LicenseKey = licenseKey;
+            }
+        }, assembly);
         service.AddMemoryCache();
 
         service.AddScoped<IAtividadeRepository>(provider =>

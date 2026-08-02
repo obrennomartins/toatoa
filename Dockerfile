@@ -1,11 +1,8 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
 WORKDIR /app
 EXPOSE 8080
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
-  && rm -rf /var/lib/apt/lists/*
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /app
 
@@ -21,13 +18,13 @@ RUN dotnet build "./src/ToAToa.Presentation/ToAToa.Presentation.csproj" -c $BUIL
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /app
-RUN dotnet publish "./src/ToAToa.Presentation/ToAToa.Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./src/ToAToa.Presentation/ToAToa.Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:PublishReadyToRun=true
 
 FROM base AS final
 WORKDIR /app
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-  CMD curl --fail http://localhost:8080/health || exit 1
+  CMD wget --quiet --spider http://localhost:8080/health || exit 1
 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ToAToa.Presentation.dll"]

@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDomain();
 builder.Services.AddDataAccess(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddPresentation(builder.Configuration);
 
 builder.Logging.AddPresentationLogging();
